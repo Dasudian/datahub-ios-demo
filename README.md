@@ -1,2 +1,2 @@
-# datahub-iso-demo
+# datahub-ios-demo
 Demo application for datahub iOS SDK
