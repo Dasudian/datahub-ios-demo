@@ -100,4 +100,4 @@ enum datahub_error_code_s {
     ERROR_MEMORY_ALLOCATE = -500,
 };
 
-#endif /* DSDCommonDefine_h */
+#endif

@@ -1,14 +1,32 @@
 # Dasudian IoT DataHub IOS SDK
 
-## 版本信息
+- [版本信息](#version)
+- [介绍](#introduce)
+- [创建客户端实例](#create)
+- [异步发送消息](#publish)
+- [同步发送消息](#send_request)
+- [订阅主题](#subscribe)
+- [取消订阅主题](#unsubscribe)
+- [销毁客户端](#destroy)
+- [上传图片](#upload_image)
+- [释放回调函数(接收)返回消息所占用的内存](#free)
+- [DataHubClientDelegate说明](#DataHubClientDelegate)
+- [选项结构体datahub_options](#datahub_options)
+- [消息结构体datahub_message](#datahub_message)
+- [错误码](#error_codes)
+- [相关术语](#related_glossary)
+- [client_id](#client_id)
+- [自动重连机制](#autoreconnect)
+
+## <a name="version">版本信息</a>
+
 | Date | Version | Note |
 |---|---|---|
 | 3/21/2017 | 2.0.0 | 根据SDK的标准修改API |
 | 2/28/2017 | 1.0.1 | 修复了调用publish函数过快时，阻塞UI线程的BUG |
 | 2/27/2017 | 1.0.0 | first version |
 
-
-## 介绍
+## <a name="introduce">介绍</a>
 
 SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部分的API都是同步的。
 
@@ -16,17 +34,15 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
 
 如何使用SDK:
 
-1. 创建一个客户端实例
+- 创建一个客户端实例
 
-2. 设置连接时的参数，然后连接服务器
+- 如果想接收消息，那么就订阅某个topic
 
-3. 如果想接收消息，那么就订阅某个topic
+- 或者发送消息到服务器
 
-4. 通过publish函数发送消息到服务器
+- 退出时，销毁该客户端
 
-5. 当APP退出时，销毁该客户端
-
-## 创建客户端实例
+## <a name="create">创建客户端实例</a>
 
 ```
 /*
@@ -43,7 +59,7 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
  *    client_id: 设备的id
  *          注意: 不能为空；一个客户可以与服务器建立多条连接，每条连接由instance_id和
  *          client_id唯一确定
- *    options: MQTT的选项。具体包含的选项可以查看datahub_options结构体.如果不想设置选项，
+ *    options: MQTT的选项。具体包含的选项可以查看datahub_options结构体。如果不想设置选项，
  *          请传递NULL。如果你想设置某些选项，先使用DATAHUB_OPTIONS_INITIALIZER初始化
  *          注意:可以为空
  * 返回值:
@@ -58,13 +74,11 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
              options:(datahub_options*)options;
 ```
 
-## 发送消息(异步）
-
-建议创建一个子线程单独调用。因为当消息发送过快而导致消息队列满了，此时SDK会休眠等待消息发送出去。
+## <a name="publish">异步发送消息</a>
 
 ```
 /*
- * 描述: 发送消息(异步)
+ * 描述: 异步发送消息
  *  注意：异步操作不阻塞线程，但不能保证消息发送成功，适用于对时间敏感，对消息成功与否
  *   不敏感的应用
  * 参数:
@@ -73,13 +87,14 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
  *    topic: 消息对应的topic。如果消息发送前有另一个客户端已经订阅该topic，则
  *          另一个客户端就会收到消息。
  *          注意: 不能为空
- *    msg: 发送的消息,使用前请使用DATAHUB_MESSAGE_INITIALIZER初始化.注意：消息
+ *    msg: 发送的消息,使用前请使用DATAHUB_MESSAGE_INITIALIZER初始化。注意：消息
  *         的长度必须小于512K，否则会发生错误
  *          注意: 不能为空
  *    QoS: 消息的服务质量
  *          0   消息可能到达，也可能不到达
  *          1   消息一定会到达，但可能会重复，当然，前提是返回ERROR_NONE
  *          2   消息一定会到达，且只到达一次，当然，前提是返回ERROR_NONE
+ *         注意：只能为0,1,2三者中的一个，其他为非法参数
  * 返回值:
  *      ERROR_NONE 表示成功，其他表示错误。
  *      其他错误码请查看开发文档API.md
@@ -91,9 +106,9 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
                     QoS:(int)QoS;
 ```
 
-## 发送消息(同步)
+## <a name="send_request">同步发送消息</a>
 
-建议创建一个子线程单独调用。否则可能阻塞UI线程
+建议创建一个子线程单独调用,否则可能阻塞UI线程
 
 ```
 /*
@@ -105,7 +120,7 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
  *    topic: 消息对应的topic。如果消息发送前有另一个客户端已经订阅该topic，则
  *          另一个客户端就会收到消息。
  *          注意: 不能为空
- *    msg: 发送的消息,使用前请使用DATAHUB_MESSAGE_INITIALIZER初始化.注意：消息
+ *    msg: 发送的消息,使用前请使用DATAHUB_MESSAGE_INITIALIZER初始化。注意：消息
  *         的长度必须小于512K，否则会发生错误
  *          注意: 不能为空
  *    QoS: 消息的服务质量
@@ -119,7 +134,7 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
  *      ERROR_NONE 表示成功，消息一定发送出去。
  *      ERROR_TIMEOUT 表示阻塞等待时间的最大值已到，但是消息可能发送给服务器，也
  *          可能未发送。如果想确保消息一定发送出去，请根据消息大小和网络状况设置
- *          较大的阻塞等待时间.
+ *          较大的阻塞等待时间。
  *      其他错误码请查看开发文档API.md
  *
  */
@@ -130,7 +145,7 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
                           timeout:(unsigned long)timeout;
 ```
 
-## 上传图片
+## <a name="upload_image">上传图片</a>
 
 同步操作，会阻塞线程
 
@@ -144,7 +159,7 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
  *    topic: 消息对应的topic。如果消息发送前有另一个客户端已经订阅该topic，则
  *          另一个客户端就会收到消息。
  *          注意: 不能为空
- *    msg: 发送的消息,使用前请使用DATAHUB_MESSAGE_INITIALIZER初始化.注意：消息
+ *    msg: 发送的消息,使用前请使用DATAHUB_MESSAGE_INITIALIZER初始化。注意：消息
  *         的长度必须小于10M，否则会发生错误
  *          注意: 不能为空
  *    QoS: 消息的服务质量
@@ -158,7 +173,7 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
  *      ERROR_NONE 表示成功，消息一定发送出去。
  *      ERROR_TIMEOUT 表示阻塞等待时间的最大值已到，但是消息可能发送给服务器，也
  *          可能未发送。如果想确保消息一定发送出去，请根据消息大小和网络状况设置
- *          较大的阻塞等待时间.
+ *          较大的阻塞等待时间。
  *      其他错误码请查看开发文档API.md
  *
  */
@@ -168,7 +183,7 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
                          QoS:(int)QoS
 ```
 
-## 订阅主题
+## <a name="subscribe">订阅主题</a>
 
 同步操作，会阻塞线程
 
@@ -182,12 +197,11 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
  *    topic: 订阅的topic
  *          注意: 不能为空
  *    timeout: 函数阻塞的最大时间。
- *          注意：这是函数阻塞的最大时间
  * 返回值:
  *      ERROR_NONE 表示成功，其他表示错误。
  *      ERROR_TIMEOUT 表示阻塞等待时间的最大值已到，但是可能订阅成功，也
  *          可能订阅失败。如果想确保订阅一定成功，请根据设置较大的阻塞等
- *          待时间.
+ *          待时间。
  *      其他错误码请查看开发文档API.md
  */
 -(int)datahub_subscribe:(datahub_client *)client
@@ -195,25 +209,25 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
                     timeout:(unsigned long)timeout;
 ```
 
-## 取消订阅主题
+## <a name="unsubscribe">取消订阅主题</a>
 
 同步操作，会阻塞线程
 
 ```
 /*
  * 描述: 同步取消订阅某一个topic
+ *  注意：程序会阻塞
  * 参数:
  *    client: 由函数datahub_create()成功返回的客户端实例
  *          注意: 不能为空
  *    topic: 取消订阅的topic
  *          注意: 不能为空
  *    timeout: 函数阻塞的最大时间。
- *          注意：这是函数阻塞的最大时间
  * 返回值:
  *      ERROR_NONE 表示成功，其他表示错误。
  *      ERROR_TIMEOUT 表示阻塞等待时间的最大值已到，但是可能取消成功，也
  *          可能取消失败。如果想确保取消一定成功，请根据设置较大的阻塞等
- *          待时间.
+ *          待时间。
  *      其他错误码请查看开发文档API.md
  */
 -(int)datahub_unsubscribe:(datahub_client *)client
@@ -221,9 +235,7 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
                       timeout:(unsigned long)timeout;
 ```
 
-## 销毁客户端
-
-同步操作，会阻塞线程
+## <a name="destroy">销毁客户端</a>
 
 ```
 /*
@@ -232,12 +244,12 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
  *    client: 由函数datahub_create()成功返回的客户端实例
  *          注意: 不能为空
  * 返回值:
- *      ERROR_NONE 表示成功，其他表示错误。错误码请查看开发文档API.md
+ *     无
  */
--(int)datahub_destroy:(datahub_client *)client;
+-(void)datahub_destroy:(datahub_client *)client;
 ```
 
-## 释放回调函数(接收)返回消息所占用的内存
+## <a name="free">释放回调函数(接收)返回消息所占用的内存</a>
 
 ```
 /*
@@ -249,7 +261,7 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
 -(void)datahub_message_free:(datahub_message *)msg;
 ```
 
-## DataHubClientDelegate说明
+## <a name="DataHubClientDelegate">DataHubClientDelegate说明</a>
 
 实现下面的代理函数，用于接收消息，监听SDK连接状态。
 
@@ -273,15 +285,15 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
 @end
 ```
 
-## 选项结构体datahub_options
+## <a name="datahub_options">选项结构体datahub_options</a>
 
 ```
 typedef struct datahub_options_s {
     /*
-     * 描述: 设置使用哪种协议(ssl, 普通的tcp)连接服务器, 以及设置服务器的地址和端口号.
-     * 值:
-     *     "协议：//服务器地址：端口号". 协议支持普通的tcp协议和加密的ssl协议; 服务器地址和端口号
-     *      由大数点提供. 默认值为DEFAULT_SERVER_URL
+     * 描述: 设置使用哪种协议(ssl, 普通的tcp)连接服务器, 以及设置服务器的地址和端口号。
+     * 值
+     *     "协议：//服务器地址：端口号"。 协议支持普通的tcp协议和加密的ssl协议; 服务器地址和端口号
+     *      由大数点提供。 默认值为DEFAULT_SERVER_URL
      */
     char *server_url;
 
@@ -300,7 +312,7 @@ typedef struct datahub_options_s {
 } datahub_options;
 ```
 
-## 消息结构体datahub_message
+## <a name="datahub_message">消息结构体datahub_message</a>
 
 ```
 /*
@@ -314,7 +326,7 @@ typedef struct datahub_message_s {
 } datahub_message;
 ```
 
-## 错误码
+## <a name="error_codes">错误码</a>
 
 ```
 enum datahub_error_code_s {
@@ -377,9 +389,10 @@ enum datahub_error_code_s {
 };
 ```
 
-## 相关术语
+## <a name="related_glossary">相关术语</a>
 
-### client_id
+
+### <a name="client_id">client_id</a>
 
 客户端id，用于服务器唯一标记一个客户端，服务器通过该id向客户端推送消息;
 注意：不同的客户端的id必须不同，如果有两个客户端有相同的id，服务器会关掉其中的一个客户端的连接。
@@ -387,6 +400,6 @@ enum datahub_error_code_s {
 如果没有自己的账号系统，则可以随机生成一个不会重复的客户端id。
 或者自己指定客户端的id，只要能保证不同客户端id不同即可。
 
-### 自动重连机制
+### <a name="autoreconnect">自动重连机制</a>
 
 当连接丢失时，SDK会尝试自动重连。如果连接失败，下一次重连将会在1s，2s，4s，8s，16s，1s，2s，4s，8s，16s，1s，...后再次尝试，最大重连间隔为16秒。
