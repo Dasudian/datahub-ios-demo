@@ -14,6 +14,7 @@
 		F2BC729F1E83C3770024D82C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F2BC729E1E83C3770024D82C /* Assets.xcassets */; };
 		F2BC72A21E83C3770024D82C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F2BC72A01E83C3770024D82C /* LaunchScreen.storyboard */; };
 		F2BC72AC1E83C5630024D82C /* libdasudian-datahub-sdk.2.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F2BC72AB1E83C5630024D82C /* libdasudian-datahub-sdk.2.0.0.a */; };
+		F2EBF35B1E8BDBAC0021DF32 /* libdasudian-datahub-sdk.2.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F2EBF35A1E8BDBAC0021DF32 /* libdasudian-datahub-sdk.2.0.0.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		F2BC72A91E83C4F90024D82C /* DataHubClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataHubClient.h; sourceTree = "<group>"; };
 		F2BC72AA1E83C4F90024D82C /* DataHubCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataHubCommon.h; sourceTree = "<group>"; };
 		F2BC72AB1E83C5630024D82C /* libdasudian-datahub-sdk.2.0.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libdasudian-datahub-sdk.2.0.0.a"; sourceTree = "<group>"; };
+		F2EBF35A1E8BDBAC0021DF32 /* libdasudian-datahub-sdk.2.0.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libdasudian-datahub-sdk.2.0.0.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +40,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F2BC72AC1E83C5630024D82C /* libdasudian-datahub-sdk.2.0.0.a in Frameworks */,
+				F2EBF35B1E8BDBAC0021DF32 /* libdasudian-datahub-sdk.2.0.0.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +66,7 @@
 		F2BC72911E83C3770024D82C /* DatahubDemo */ = {
 			isa = PBXGroup;
 			children = (
+				F2EBF35A1E8BDBAC0021DF32 /* libdasudian-datahub-sdk.2.0.0.a */,
 				F2BC72AB1E83C5630024D82C /* libdasudian-datahub-sdk.2.0.0.a */,
 				F2BC72A91E83C4F90024D82C /* DataHubClient.h */,
 				F2BC72AA1E83C4F90024D82C /* DataHubCommon.h */,
@@ -325,6 +329,7 @@
 				F2BC72A81E83C3770024D82C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
