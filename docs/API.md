@@ -253,12 +253,15 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
 
 ```
 /*
- * 描述：释放回调函数(接收)返回消息所占用的内存
+ * 描述：接收函数中，主题和消息占用的内存需要用户手动释放
  * 参数：
- *  msg: 回调函数(接收)返回的消息
+ *  topic: 返回的主题
+ *  msg: 返回的消息
  * 返回值:
+ *  无
  */
--(void)datahub_message_free:(datahub_message *)msg;
+-(void)datahub_callback_free:(char *)topic
+                         msg:(datahub_message *)msg
 ```
 
 ## <a name="DataHubClientDelegate">DataHubClientDelegate说明</a>
@@ -271,8 +274,8 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
  * 描述： 接收到消息后的回调函数
  * 参数：
  *      context: 传递给选项'context'的内容
- *      topic: 本次消息所属的主题
- *      msg: 存放消息的结构体
+ *      topic: 本次消息所属的主题,需要调用datahub_callback_free()手动释放内存
+ *      msg: 存放消息的结构体,需要调用datahub_callback_free()手动释放内存
  */
 -(void)messageReceived:(void *)context topic:(char *)topic message:(datahub_message *)msg;
 /*

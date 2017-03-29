@@ -1,4 +1,5 @@
 /*
+ *
  * Licensed Materials - Property of Dasudian
  * Copyright Dasudian Technology Co., Ltd. 2017
  */
@@ -30,11 +31,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self loadMainView];
-    [self loadMoreData];
+//    [self loadMainView];
+    [[[NSThread alloc]initWithTarget:self selector:@selector(loadMainView:) object:nil] start];
+//    [self loadMoreData];
+    [[[NSThread alloc]initWithTarget:self selector:@selector(loadMoreData:) object:nil] start];
 }
 
--(void)loadMainView
+-(void)loadMainView:(id)none
 {
     UILabel * topicLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 40 , 40, 40)];
     [topicLabel setFont:[UIFont systemFontOfSize:14.0]];
@@ -125,7 +128,7 @@
     [self.view addSubview:_logTextView];
 }
 
--(void)loadMoreData
+-(void)loadMoreData:(id)none
 {
     [self initClient];
 }
@@ -164,7 +167,9 @@
     [_topicInput resignFirstResponder];
     [_messageInput resignFirstResponder];
     
-    [self publishMessage:_messageInput.text];
+
+    [[[NSThread alloc]initWithTarget:self selector:@selector(publishMessage:) object:_messageInput.text] start];
+//    [self publishMessage:_messageInput.text];
 }
 
 -(void)handleClearLog
@@ -294,8 +299,10 @@
     ret = [[DataHubClient shareInstance]datahub_sendrequest:&_client topic:currentTopic msg:&msg QoS:2 timeout:10];
     if (ERROR_NONE != ret) {
         NSString *str = [NSString stringWithFormat:@"sync send message failed, ret = %d\n", ret];
+       // [self performSelectorOnMainThread:@selector(updateLog:) withObject:str waitUntilDone:YES];
         [self refreshUIWithMessage:str];
     } else {
+       // [self performSelectorOnMainThread:@selector(updateLog:) withObject:str waitUntilDone:YES];
         [self refreshUIWithMessage:@"同步发送了消息\n"];
     }
 }
@@ -339,6 +346,8 @@
     free(buff);
     
     [self refreshUIWithMessage:[NSString stringWithFormat:@"接收主题为 %s ;消息为%@\n", topic_name, content]];
+    /* 必须释放内存 */
+    [[DataHubClient shareInstance]datahub_callback_free:topic_name message:msg];
 }
 
 -(void)connectionStatusChanged:(void *)context isconnected:(int)isconnected
