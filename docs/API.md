@@ -1,4 +1,4 @@
-# Dasudian IoT DataHub IOS SDK
+# Dasudian IoT DataHub iOS SDK
 
 - [版本信息](#version)
 - [介绍](#introduce)
