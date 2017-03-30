@@ -142,7 +142,7 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
                     topic:(char *)topic
                       msg:(datahub_message *)msg
                         QoS:(int)QoS
-                          timeout:(unsigned long)timeout;
+                          timeout:(int)timeout;
 ```
 
 ## <a name="upload_image">上传图片</a>
@@ -206,7 +206,7 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
  */
 -(int)datahub_subscribe:(datahub_client *)client
                   topic:(char *)topic
-                    timeout:(unsigned long)timeout;
+                    timeout:(int)timeout;
 ```
 
 ## <a name="unsubscribe">取消订阅主题</a>
@@ -232,7 +232,7 @@ SDK基于MQTT协议，传输实时的消息到大数点IoT云服务器，大部�
  */
 -(int)datahub_unsubscribe:(datahub_client *)client
                     topic:(char *)topic
-                      timeout:(unsigned long)timeout;
+                      timeout:(int)timeout;
 ```
 
 ## <a name="destroy">销毁客户端</a>
