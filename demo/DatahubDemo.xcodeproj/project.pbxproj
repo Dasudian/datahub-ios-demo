@@ -7,17 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F2AFE2621F0E52D8005C7CEA /* libdasudian-datahub-sdk.2.2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F2AFE2611F0E52D8005C7CEA /* libdasudian-datahub-sdk.2.2.0.a */; };
 		F2BC72941E83C3770024D82C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F2BC72931E83C3770024D82C /* main.m */; };
 		F2BC72971E83C3770024D82C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F2BC72961E83C3770024D82C /* AppDelegate.m */; };
 		F2BC729A1E83C3770024D82C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F2BC72991E83C3770024D82C /* ViewController.m */; };
 		F2BC729D1E83C3770024D82C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F2BC729B1E83C3770024D82C /* Main.storyboard */; };
 		F2BC729F1E83C3770024D82C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F2BC729E1E83C3770024D82C /* Assets.xcassets */; };
 		F2BC72A21E83C3770024D82C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F2BC72A01E83C3770024D82C /* LaunchScreen.storyboard */; };
-		F2BC72AC1E83C5630024D82C /* libdasudian-datahub-sdk.2.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F2BC72AB1E83C5630024D82C /* libdasudian-datahub-sdk.2.0.0.a */; };
-		F2EBF35B1E8BDBAC0021DF32 /* libdasudian-datahub-sdk.2.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F2EBF35A1E8BDBAC0021DF32 /* libdasudian-datahub-sdk.2.0.0.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F2AFE2611F0E52D8005C7CEA /* libdasudian-datahub-sdk.2.2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libdasudian-datahub-sdk.2.2.0.a"; path = "../../lib/libdasudian-datahub-sdk.2.2.0.a"; sourceTree = "<group>"; };
 		F2BC728F1E83C3770024D82C /* DatahubDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DatahubDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2BC72931E83C3770024D82C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F2BC72951E83C3770024D82C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -28,10 +28,6 @@
 		F2BC729E1E83C3770024D82C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F2BC72A11E83C3770024D82C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F2BC72A31E83C3770024D82C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F2BC72A91E83C4F90024D82C /* DataHubClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataHubClient.h; sourceTree = "<group>"; };
-		F2BC72AA1E83C4F90024D82C /* DataHubCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataHubCommon.h; sourceTree = "<group>"; };
-		F2BC72AB1E83C5630024D82C /* libdasudian-datahub-sdk.2.0.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libdasudian-datahub-sdk.2.0.0.a"; sourceTree = "<group>"; };
-		F2EBF35A1E8BDBAC0021DF32 /* libdasudian-datahub-sdk.2.0.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libdasudian-datahub-sdk.2.0.0.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,8 +35,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F2BC72AC1E83C5630024D82C /* libdasudian-datahub-sdk.2.0.0.a in Frameworks */,
-				F2EBF35B1E8BDBAC0021DF32 /* libdasudian-datahub-sdk.2.0.0.a in Frameworks */,
+				F2AFE2621F0E52D8005C7CEA /* libdasudian-datahub-sdk.2.2.0.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,10 +61,7 @@
 		F2BC72911E83C3770024D82C /* DatahubDemo */ = {
 			isa = PBXGroup;
 			children = (
-				F2EBF35A1E8BDBAC0021DF32 /* libdasudian-datahub-sdk.2.0.0.a */,
-				F2BC72AB1E83C5630024D82C /* libdasudian-datahub-sdk.2.0.0.a */,
-				F2BC72A91E83C4F90024D82C /* DataHubClient.h */,
-				F2BC72AA1E83C4F90024D82C /* DataHubCommon.h */,
+				F2AFE2611F0E52D8005C7CEA /* libdasudian-datahub-sdk.2.2.0.a */,
 				F2BC72951E83C3770024D82C /* AppDelegate.h */,
 				F2BC72961E83C3770024D82C /* AppDelegate.m */,
 				F2BC72981E83C3770024D82C /* ViewController.h */,
@@ -122,6 +114,7 @@
 				TargetAttributes = {
 					F2BC728E1E83C3770024D82C = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = RLX77SNBBB;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -284,11 +277,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = RLX77SNBBB;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../include";
 				INFOPLIST_FILE = DatahubDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/DatahubDemo",
+					"$(PROJECT_DIR)/../lib",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = eden.DatahubDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -299,11 +294,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = RLX77SNBBB;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/../include";
 				INFOPLIST_FILE = DatahubDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/DatahubDemo",
+					"$(PROJECT_DIR)/../lib",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = eden.DatahubDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
