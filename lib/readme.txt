@@ -1,1 +1,1 @@
-由于生成的静态库较大，我们不直接提供，而是保存在文件服务器中，请咨询大数点客服索取
+由于SDK库较大, 我们并未上传至github.com. 最新版本为2.2.0. 下载地址 http://downloads.dasudian.net/sdk/datahub/ios/datahub-ios-sdk-2.2.0.zip

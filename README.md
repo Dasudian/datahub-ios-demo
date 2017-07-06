@@ -2,7 +2,7 @@
 
 该项目使用IOS SDK实现了demo程序.
 
-本文档介绍了当前目录结构和每个文件的作用，如何编译和运行demo程序。如果你想知道API的细节，请阅读API文档[API.md](./docs/API.md)或者头文件[DataHubCommon.h](./include/DataHubCommon.h)、[DataHubClient.h](./include/DataHubClient.h)
+本文档介绍了当前目录结构和每个文件的作用，如何编译和运行demo程序。如果你想知道API的细节，请阅读docs目录下的API文档或者头文件[DataHubCommon.h](./include/DataHubCommon.h)、[DataHubClient.h](./include/DataHubClient.h)
 
 ## 目录结构说明
 
@@ -12,13 +12,13 @@
 
 DatahubDemo.xcodeproj目录存放的是工程文件
 
-DataHubDemo/ViewController.m集成了SDK，可以发送消息（同步操作），订阅和取消订阅主题。
+DataHubDemo/ViewController.m集成了SDK，可以发送消息，订阅和取消订阅主题。
 
 其他文件可以忽略
 
 ### docs目录
 
-[API.md](./docs/API.md) 包含了SDK的所有API, 或者你也可以查看头文件[DataHubClient.h](./include/DataHubClient.h)
+API.pdf 包含了SDK的所有API, 或者你也可以查看头文件[DataHubClient.h](./include/DataHubClient.h)
 
 ### include目录
 
