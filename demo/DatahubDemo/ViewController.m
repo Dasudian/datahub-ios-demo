@@ -7,21 +7,27 @@
 #import "ViewController.h"
 #import "DataHubClient.h"
 
-/* instance id, 由大数点提供 */
-#define INSTANCE_ID    "dsd_9FmYSNiqpFmi69Bui0_A"
-/* instance key, 由大数点提供 */
-#define INSTANCE_KEY   "238f173d6cc0608a"
+/*  instance id, 标识客户的唯一ID，请联系大数点商务support@dasudian.com获取 */
+#define INSTANCE_ID    "your_instance_id"
+/*  instance key, 与客户标识相对应的安全密钥，请联系大数点商务support@dasudian.com获取 */
+#define INSTANCE_KEY   "your_instance_key"
+
+/*  大数点IoT DataHub云端地址，请联系大数点商务support@dasudian.com获取 */
+#define SERVER_URL      "www.example.com"
 /* 设备的名字 */
-#define CLIENT_NAME     "device"
+#define CLIENT_NAME     "ios-device"
 /* 设备的id */
-#define CLIENT_ID      "NO1"
+#define CLIENT_ID      "ios-device-1"
 
 @interface ViewController ()<DataHubClientDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 
+/* 主题文本框 */
 @property(nonatomic,strong) UITextField * topicInput;
+/* 发送消息文本框 */
 @property(nonatomic,strong) UITextField * messageInput;
+/* 显示日志文本框 */
 @property(nonatomic,strong) UITextView * logTextView;
-
+/* 客户端 */
 @property(nonatomic,assign) datahub_client client;
 
 @end
@@ -30,10 +36,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-//    [self loadMainView];
     [[[NSThread alloc]initWithTarget:self selector:@selector(loadMainView:) object:nil] start];
-//    [self loadMoreData];
     [[[NSThread alloc]initWithTarget:self selector:@selector(loadMoreData:) object:nil] start];
 }
 
@@ -109,16 +112,7 @@
     [clearButton setTitle:@"清除" forState:UIControlStateNormal];
     [self.view addSubview:clearButton];
 
-    UIButton * uploadImageButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    uploadImageButton.frame = CGRectMake(10, CGRectGetMaxY(messageLabel.frame) + 10 , SCREEN_WIDTH - 20, 40);
-    uploadImageButton.layer.masksToBounds = YES;
-    uploadImageButton.layer.cornerRadius = 5.0;
-    [uploadImageButton setBackgroundColor:ButtonColor];
-    [uploadImageButton addTarget:self action:@selector(handleUploadImage) forControlEvents:UIControlEventTouchUpInside];
-    [uploadImageButton setTitle:@"上传图片" forState:UIControlStateNormal];
-    [self.view addSubview:uploadImageButton];
-    
-    _logTextView = [[UITextView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(uploadImageButton.frame)+10, SCREEN_WIDTH-20, SCREEN_HEIGHT-CGRectGetMaxY(messageLabel.frame)-10)];
+    _logTextView = [[UITextView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(clearButton.frame)+10, SCREEN_WIDTH-20, SCREEN_HEIGHT-CGRectGetMaxY(messageLabel.frame)-10)];
     _logTextView.editable = NO;
     _logTextView.layer.masksToBounds = YES;
     _logTextView.layer.cornerRadius = 5.0;
@@ -142,6 +136,7 @@
     }
     [_topicInput resignFirstResponder];
     [_messageInput resignFirstResponder];
+    /* 订阅主题 */
     [[[NSThread alloc]initWithTarget:self selector:@selector(subscribeTopic:) object:_topicInput.text] start];
 }
 
@@ -151,6 +146,7 @@
         _logTextView.text = [_logTextView.text stringByAppendingString:@"取消订阅主题不能为空 \n"];
         return;
     }
+    /* 取消订阅 */
     [[[NSThread alloc]initWithTarget:self selector:@selector(cancelSubscribeTopic:) object:_topicInput.text] start];
 }
 
@@ -168,8 +164,8 @@
     [_messageInput resignFirstResponder];
     
 
+    /* 发送消息 */
     [[[NSThread alloc]initWithTarget:self selector:@selector(publishMessage:) object:_messageInput.text] start];
-//    [self publishMessage:_messageInput.text];
 }
 
 -(void)handleClearLog
@@ -177,67 +173,21 @@
     _logTextView.text = @"";
 }
 
--(void)handleUploadImage
-{
-    UIActionSheet *sheet;
-    sheet = [[UIActionSheet alloc]initWithTitle:@"选择" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"取消" otherButtonTitles:@"从相册选择", nil];
-    sheet.tag = 255;
-    [sheet showInView:self.view];
-}
-
-#pragma mark - image picker delegte
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
-{
-    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
-    NSData *data = UIImagePNGRepresentation(image);
-    
-    NSThread *thread = [[NSThread alloc]initWithTarget:self selector:@selector(uploadImage:) object:data];
-    [thread start];
-    
-    [picker dismissViewControllerAnimated:YES completion:^{}];
-}
-
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
-{
-    [self dismissViewControllerAnimated:YES completion:^{}];
-}
-
-#pragma mark - actionsheet delegate
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (actionSheet.tag == 255) {
-        NSUInteger sourceType = 0;
-        if (buttonIndex == 0) {
-            return;
-        } else {
-            sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
-        }
-        UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
-        imagePickerController.delegate = self;
-        imagePickerController.allowsEditing = YES;
-        imagePickerController.sourceType = sourceType;
-        [self presentViewController:imagePickerController animated:YES completion:^{}];
-    }
-}
-
 #pragma mark - call lib
 -(void)initClient
 {
     int ret;
+    /* 初始化选项 */
     datahub_options options = DATAHUB_OPTIONS_INITIALIZER;
-    /* open debug option */
-//    setenv("MQTT_C_CLIENT_TRACE", "ON", 1);
-//    setenv("MQTT_C_CLIENT_TRACE_LEVEL", "MAXIMUM", 1);
-    options.debug = DATAHUB_TRUE;
-//    options.server_url = "ssl://try.iotdatahub.net:8883";
-    options.server_url = "tcp://try.iotdatahub.net:1883";
-    /* create a client object */
+    /* 设置服务器地址 */
+    options.server_url = SERVER_URL;
+    /* 创建客户端 */
     ret = [[DataHubClient shareInstance] datahub_create:&_client instance_id:INSTANCE_ID instance_key:INSTANCE_KEY client_name:CLIENT_NAME client_id:CLIENT_ID options:&options];
     if (ERROR_NONE != ret) {
-        [self refreshUIWithMessage:[NSString stringWithFormat:@"create client failed, %d\n", ret]];
+        [self refreshUIWithMessage:[NSString stringWithFormat:@"创建客户端失败, %d\n", ret]];
         return;
     }else{
-        [self refreshUIWithMessage:@"create client success\n"];
+        [self refreshUIWithMessage:@"创建客户端成功\n"];
     }
 
     [DataHubClient shareInstance].delegate = self;
@@ -246,44 +196,26 @@
 -(void)subscribeTopic:(NSString *)topic
 {
     int ret;
-    ret = [[DataHubClient shareInstance]datahub_subscribe:&_client topic:(char *) [topic UTF8String] timeout:(10)];
+    /* 订阅主题, 最大以qos1的服务质量接收消息, 超时时间设置为10s */
+    ret = [[DataHubClient shareInstance]datahub_subscribe:&_client topic:(char *) [topic UTF8String] QoS:1 timeout:(10)];
     if (ERROR_NONE != ret) {
-        [self refreshUIWithMessage:@"subscribe topic failed\n"];
+        [self refreshUIWithMessage:@"订阅主题失败, 错误码 %d\n", ret];
     } else {
-        [self refreshUIWithMessage:@"subscribe topic success\n"];
+        [self refreshUIWithMessage:@"订阅主题成功\n"];
     }
 }
 
 -(void)cancelSubscribeTopic:(NSString *)topic
 {
     int ret;
+    /* 取消订阅主题 */
     ret = [[DataHubClient shareInstance]datahub_unsubscribe:&_client topic:(char *)[topic UTF8String] timeout:(10)];
     if (ERROR_NONE != ret) {
-        [self refreshUIWithMessage:@"unsubscribe topic failed\n"];
+        [self refreshUIWithMessage:@"取消订阅失败, 错误码 %d\n", ret];
     } else {
-        [self refreshUIWithMessage:@"unsubscribe topic success\n"];
+        [self refreshUIWithMessage:@"取消订阅成功\n"];
     }
 }
-
-//-(void)publishMessage:(NSString *)message
-//{
-//    int ret;
-//    
-//    datahub_message msg = DATAHUB_MESSAGE_INITIALIZER;
-//    NSData *bytes = [message dataUsingEncoding:NSUTF8StringEncoding];
-//    msg.payload = (void *)[bytes bytes];
-//    msg.payload_len = (int)bytes.length;
-//    char * currentTopic = (char *)[_topicInput.text UTF8String];
-//    
-//    /* send message asynchronously */
-//    ret = [[DataHubClient shareInstance]datahub_publish:&_client topic:currentTopic msg:&msg QoS:2];
-//    if (ERROR_NONE != ret) {
-//        NSString *str = [NSString stringWithFormat:@"async send message failed, ret = %d\n", ret];
-//        [self refreshUIWithMessage:str];
-//    } else {
-//        [self refreshUIWithMessage:@"异步发送了消息\n"];
-//    }
-//}
 
 -(void)publishMessage:(NSString *)message
 {
@@ -295,45 +227,24 @@
     msg.payload_len = (int)bytes.length;
     char * currentTopic = (char *)[_topicInput.text UTF8String];
     
-    /* send message synchronously */
-    ret = [[DataHubClient shareInstance]datahub_sendrequest:&_client topic:currentTopic msg:&msg QoS:2 timeout:10];
+    /* 发送qos1消息, 超时时间设置为10s */
+    ret = [[DataHubClient shareInstance]datahub_sendrequest:&_client topic:currentTopic msg:&msg QoS:1 timeout:10];
     if (ERROR_NONE != ret) {
-        NSString *str = [NSString stringWithFormat:@"sync send message failed, ret = %d\n", ret];
-       // [self performSelectorOnMainThread:@selector(updateLog:) withObject:str waitUntilDone:YES];
+        NSString *str = [NSString stringWithFormat:@"发送消息失败, 错误码为 %d\n", ret];
         [self refreshUIWithMessage:str];
     } else {
-       // [self performSelectorOnMainThread:@selector(updateLog:) withObject:str waitUntilDone:YES];
-        [self refreshUIWithMessage:@"同步发送了消息\n"];
-    }
-}
-
--(void)uploadImage:(NSData *)data
-{
-    int ret;
-    
-    if (!_topicInput.text.length) {
-        _logTextView.text = [_logTextView.text stringByAppendingString:@"主题不能为空\n"];
-        return;
-    }
-    datahub_message msg = DATAHUB_MESSAGE_INITIALIZER;
-    msg.payload = (void *)[data bytes];
-    msg.payload_len = (int)data.length;
-    char * currentTopic = (char *)[_topicInput.text UTF8String];
-    ret = [[DataHubClient shareInstance]datahub_upload_image:&_client topic:currentTopic msg:&msg QoS:2 timeout:10];
-    if (ERROR_NONE != ret) {
-        [self refreshUIWithMessage:@"upload image failed\n"];
-    } else {
-        [self refreshUIWithMessage:@"upload image success\n"];
+        [self refreshUIWithMessage:@"发送消息成功\n"];
     }
 }
 
 -(void)destroyClient
 {
-    /* free memory */
+    /* 销毁客户端并断开连接 */
     [[DataHubClient shareInstance]datahub_destroy:&_client];
 }
 
 #pragma mark - DataHubClientDelegate
+/* 接收到消息后的回调函数 */
 -(void)messageReceived:(void *)context topic:(char *)topic_name message:(datahub_message *)msg
 {
     char *buff = malloc(msg->payload_len + 1);
@@ -349,7 +260,7 @@
     /* 必须释放内存 */
     [[DataHubClient shareInstance]datahub_callback_free:topic_name message:msg];
 }
-
+/* 网络连接发生变化的通知函数 */
 -(void)connectionStatusChanged:(void *)context isconnected:(int)isconnected
 {
     if (isconnected == DATAHUB_TRUE ) {
@@ -364,8 +275,6 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self updateUIWithMessage:message];
     });
-    // 使用下面这个API用时会使界面卡死
-//    [self performSelectorOnMainThread:@selector(updateUIWithMessage:) withObject:message waitUntilDone:YES];
 }
 
 -(void)updateUIWithMessage:(NSString *)message
