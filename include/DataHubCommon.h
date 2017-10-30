@@ -74,6 +74,23 @@ enum datahub_error_code_s {
     ERROR_TIMEOUT = -12,
     /** 内存申请失败 */
     ERROR_MEMORY_ALLOCATE = -500,
+    /** 不合法的JSON字符串 */
+    ERROR_MESSAGE_INVALID_JSON = -501,
+    /** 不合法的设备类型字符;设备类型不能包含竖线"|", 也不能以下划线"_"开头 */
+    ERROR_INVALID_CLIENT_TYPE = -502
 };
+
+/**
+ * 数据类型
+ */
+typedef enum datahub_data_type_s {
+    /** 数据为JSON格式 */
+    JSON = 0,
+    /** 数据为文本/字符串 */
+    TEXT = 1,
+    /** 数据为二进制 */
+    BINARY = 2,
+    DATA_TYPE_END
+}datahub_data_type;
 
 #endif
