@@ -10,7 +10,7 @@
 /*  instance id, 标识客户的唯一ID，请联系大数点商务support@dasudian.com获取 */
 #define INSTANCE_ID    "your_instance_id"
 /*  instance key, 与客户标识相对应的安全密钥，请联系大数点商务support@dasudian.com获取 */
-#define INSTANCE_KEY   "dsd_9FbtxYWifMpGsnfDY8_A"
+#define INSTANCE_KEY   "your_instance_key"
 
 /*  大数点IoT DataHub云端地址，请联系大数点商务support@dasudian.com获取 */
 #define SERVER_URL      "www.example.com"
