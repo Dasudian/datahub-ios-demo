@@ -199,7 +199,7 @@
     /* 订阅主题, 最大以qos1的服务质量接收消息, 超时时间设置为10s */
     ret = [[DataHubClient shareInstance]datahub_subscribe:&_client topic:(char *) [topic UTF8String] QoS:1 timeout:(10)];
     if (ERROR_NONE != ret) {
-        [self refreshUIWithMessage:@"订阅失败, 错误码 %d\n", ret];
+        [self refreshUIWithMessage:[NSString stringWithFormat:@"订阅失败, 错误码 %d\n", ret]];
     } else {
         [self refreshUIWithMessage:@"订阅主题成功\n"];
     }
@@ -211,7 +211,7 @@
     /* 取消订阅主题 */
     ret = [[DataHubClient shareInstance]datahub_unsubscribe:&_client topic:(char *)[topic UTF8String] timeout:(10)];
     if (ERROR_NONE != ret) {
-        [self refreshUIWithMessage:@"取消订阅失败, 错误码 %d\n", ret];
+        [self refreshUIWithMessage:[NSString stringWithFormat:@"取消订阅失败, 错误码 %d\n", ret]];
     } else {
         [self refreshUIWithMessage:@"取消订阅成功\n"];
     }
@@ -231,7 +231,7 @@
     ret = [[DataHubClient shareInstance]datahub_sendrequest:&_client topic:currentTopic msg:&msg data_type:TEXT QoS:1 timeout:10];
     if (ERROR_NONE != ret) {
         NSString *str = [NSString stringWithFormat:@"发送消息失败, 错误码为 %d\n", ret];
-        [self refreshUIWithMessage:str];
+　　　　　[self refreshUIWithMessage:str];
     } else {
         [self refreshUIWithMessage:@"发送消息成功\n"];
     }
